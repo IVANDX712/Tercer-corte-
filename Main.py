@@ -22,6 +22,7 @@ X = train.iloc[:, 1:785]
 y = train.iloc[:, 0]
 X_test = test.iloc[:, 0:784]
 
+""""""""
 X_tsn = X/255
 from sklearn.manifold import TSNE
 tsne = TSNE()
@@ -31,4 +32,47 @@ plt.scatter(tsne_res[:,0], tsne_res[:,1], c=y, s=2)
 plt.xticks([])
 plt.yticks([])
 plt.colorbar()
+plt.show()
+""""""""
+from sklearn.model_selection import train_test_split
+X_train, X_validation, y_train, y_validation = train_test_split(X, y, test_size = 0.2,random_state = 1212)
+
+print('X_train:', X_train.shape)
+print('y_train:', y_train.shape)
+print('X_validation:', X_validation.shape)
+print('y_validation:', y_validation.shape)
+
+x_train_re = X_train.to_numpy().reshape(33600, 28, 28)
+y_train_re = y_train.values
+x_validation_re = X_validation.to_numpy().reshape(8400, 28, 28)
+y_validation_re = y_validation.values
+x_test_re = test.to_numpy().reshape(28000, 28, 28)
+
+print('x_train:', x_train_re.shape)
+print('y_train:', y_train_re.shape)
+print('x_validation:', x_validation_re.shape)
+print('y_validation:', y_validation_re.shape)
+print('x_test:', x_test_re.shape)
+# Save image parameters to the constants that we will use later for data re-shaping and for model traning.
+(_, IMAGE_WIDTH, IMAGE_HEIGHT) = x_train_re.shape
+IMAGE_CHANNELS = 1
+print('IMAGE_WIDTH:', IMAGE_WIDTH);
+print('IMAGE_HEIGHT:', IMAGE_HEIGHT);
+print('IMAGE_CHANNELS:', IMAGE_CHANNELS);
+
+pd.DataFrame(x_train_re[0])
+
+plt.imshow(x_train_re[0], cmap=plt.cm.binary)
+plt.show()
+# Let's print some more training examples to get the feeling of how the digits were written.
+numbers_to_display = 25
+num_cells = math.ceil(math.sqrt(numbers_to_display))
+plt.figure(figsize=(10,10))
+for i in range(numbers_to_display):
+    plt.subplot(num_cells, num_cells, i+1)
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(x_train_re[i], cmap=plt.cm.binary)
+    plt.xlabel(y_train_re[i])
 plt.show()
